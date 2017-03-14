@@ -269,13 +269,14 @@ namespace MultiColSLAM
 		return true;
 	}
 
-	std::vector<size_t> cMultiFrame::GetFeaturesInArea(const int& cam,
+	const std::vector<size_t>& cMultiFrame::GetFeaturesInArea(const int& cam,
 		const double &x,
 		const double &y,
 		const double &r,
 		int minLevel, int maxLevel) const
 	{
-		std::vector<size_t> vIndices;
+		thread_local static std::vector<size_t> vIndices;
+		vIndices.clear();
 
 		int nMinCellX = floor((x - mnMinX[cam] - r)*mfGridElementWidthInv[cam]);
 		nMinCellX = std::max(0, nMinCellX);

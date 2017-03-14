@@ -21,7 +21,7 @@
 /*
 * MultiCol-SLAM is based on ORB-SLAM2 which was also released under GPLv3
 * For more information see <https://github.com/raulmur/ORB_SLAM2>
-* Raúl Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
+* Raï¿½l Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
 */
 
 #include "cSystem.h"
@@ -74,8 +74,8 @@ namespace MultiColSLAM
 
 		// load MCS
 		cout << endl << "Loading camera and MCS calibrations" << endl;
-		cMultiCamSys_ camSystem;
-		this->LoadMCS(path2MCScalibrationFiles, camSystem);
+		cMultiCamSys_ camSystem = this->LoadMCS(path2MCScalibrationFiles);
+		
 
 		//Create KeyFrame Database
 		mpKeyFrameDatabase = new cMultiKeyFrameDatabase(*mpVocabulary);
@@ -102,8 +102,6 @@ namespace MultiColSLAM
 		mptLoopClosing = new thread(&cLoopClosing::Run, mpLoopCloser);
 
 		//Initialize the Viewer thread and launch
-
-		//Initialize the Viewer thread and launch
 		mpViewer = new cViewer(this, mpMultiFramePublisher,
 			mpMapPublisher, mpTracker, strSettingsFile);
 		if (bUseViewer)
@@ -122,8 +120,7 @@ namespace MultiColSLAM
 		mpLoopCloser->SetLocalMapper(mpLocalMapper);
 	}
 
-	void cSystem::LoadMCS(const string path2calibrations,
-		cMultiCamSys_& camSystem)
+	cMultiCamSys_ cSystem::LoadMCS(const string path2calibrations)
 	{
 
 		string mcs_settings = path2calibrations + "/MultiCamSys_Calibration.yaml";
@@ -134,13 +131,25 @@ namespace MultiColSLAM
 		for (int c = 0; c < nrCams; ++c)
 		{
 			// all M_c
-			cv::Matx61d tmp;
-			for (int p = 1; p < 7; ++p)
-			{
-				string param = "CameraSystem.cam" + to_string(c + 1) + "_" + to_string(p);
-				tmp(p - 1) = mcs_calib_data[param];
-			}
-			M_c_s[c] = cayley2hom<double>(tmp);
+
+			// cv::Matx61d tmp;
+			// for (int p = 1; p < 7; ++p)
+			// {
+			// 	string param = "CameraSystem.cam" + to_string(c + 1) + "_" + to_string(p);
+			// 	tmp(p - 1) = mcs_calib_data[param];
+			// }
+			// M_c_s[c] = cayley2hom<double>(tmp);
+			
+			M_c_s[c] = cv::Matx44d::eye();
+
+			// double yAngle = CV_PI*2*0.10;
+			// M_c_s[c] = {
+			// 	1,0,0,							0,
+			// 	0,cos(yAngle),sin(yAngle),		0.10,
+			// 	0,-sin(yAngle),cos(yAngle),		-0.05,
+			// 	0,0,0,1
+			// };
+
 
 			// Interior orientation
 			string calib_data = path2calibrations + "/InteriorOrientationFisheye" + to_string(c) + ".yaml";
@@ -170,13 +179,11 @@ namespace MultiColSLAM
 				mirrorMasks.push_back(cv::Mat::ones(cv::Size(Iw, Ih), CV_8UC1));
 
 			camModel.SetMirrorMasks(mirrorMasks);
-
-			camModel.SetMirrorMasks(mirrorMasks);
 			camModels[c] = camModel;
 
 		}
 		// set up the cam system and initialize its first pose to identity
-		camSystem = cMultiCamSys_(cv::Matx44d::eye(), M_c_s, camModels);
+		return cMultiCamSys_(cv::Matx44d::eye(), M_c_s, camModels);
 	}
 
 	cv::Matx44d cSystem::TrackMultiColSLAM(
@@ -217,8 +224,10 @@ namespace MultiColSLAM
 				mbReset = false;
 			}
 		}
-
-		return mpTracker->GrabImageSet(imgSet, timestamp);
+		
+		cv::Matx44d pose = mpTracker->GrabImageSet(imgSet, timestamp);
+		mpTracker->Track();
+		return pose;
 	}
 
 	void cSystem::ActivateLocalizationMode()

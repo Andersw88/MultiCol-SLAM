@@ -1,0 +1,12 @@
+<launch>
+  
+  <!--<node pkg="rosbag" type="play" name="player" args="- -clock -r 2  /home/anders/bagfiles/Husqvarna/set2.bag /usb_cam/image_raw:=/camera/image_raw" output="screen"/>-->
+
+    <node pkg="rosbag" type="play" name="player" args="--clock -r 1  /home/anders/bagfiles/lab/test3.bag /usb_cam/image_raw:=/camera/image_raw" output="screen"/>
+
+
+  <!--<node pkg="multicol_slam" type="fishEye" name="fishEye" args="$(find multicol_slam)/../Examples/small_orb_omni_voc_9_6.yml $(find multicol_slam)/Slam_Settings_indoor1.yaml $(find multicol_slam)/" output="screen"/>-->
+
+  
+
+</launch>

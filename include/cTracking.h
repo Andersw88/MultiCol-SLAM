@@ -124,6 +124,7 @@ namespace MultiColSLAM
 		void Reset();
 
 		int GetNrCams();
+		bool Track();
 	protected:
 
 		std::vector<std::vector<std::string>> imagePaths;
@@ -136,7 +137,7 @@ namespace MultiColSLAM
 
 		cv::Matx44d initPose;
 		double curBaseline2MKF;
-		bool Track();
+		
 
 		void FirstInitialization();
 		void Initialize();

@@ -21,7 +21,7 @@
 /*
 * MultiCol-SLAM is based on ORB-SLAM2 which was also released under GPLv3
 * For more information see <https://github.com/raulmur/ORB_SLAM2>
-* Raúl Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
+* Raï¿½l Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
 */
 
 
@@ -1156,8 +1156,8 @@ void mdBRIEFextractorOct::ComputeKeyPointsOld(
 }
 
 void mdBRIEFextractorOct::ComputePyramid(
-	cv::Mat image, 
-	cv::Mat Mask)
+	const cv::Mat& image, 
+	const cv::Mat& Mask)
 {
 	for (int level = 0; level < numlevels; ++level)
 	{
@@ -1242,8 +1242,8 @@ static void computeDescriptors(
 }
 
 void mdBRIEFextractorOct::operator()(
-	InputArray _image,
-	InputArray _mask,
+	const Mat& _image,
+	const Mat& _mask,
 	vector<KeyPoint>& _keypoints,
 	cCamModelGeneral_& camModel,
 	OutputArray _descriptors,
@@ -1252,11 +1252,11 @@ void mdBRIEFextractorOct::operator()(
 	if (_image.empty())
 		return;
 
-	Mat image = _image.getMat(), mask = _mask.getMat();
-	assert(image.type() == CV_8UC1);
+	// Mat image = _image.getMat(), mask = _mask.getMat();
+	assert(_image.type() == CV_8UC1);
 
 	// Pre-compute the scale pyramids
-	ComputePyramid(image, mask);
+	ComputePyramid(_image, _mask);
 
 	vector < vector<KeyPoint> > allKeypoints;
 	ComputeKeyPointsOctTree(allKeypoints);

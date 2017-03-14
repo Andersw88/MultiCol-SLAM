@@ -133,7 +133,7 @@ namespace MultiColSLAM
 		cv::Mat GetDescriptorsMasks(int c) const { return mDescriptorMasks[c]; }
 		const uint64_t* GetDescriptorMaskRowPtr(const int& cam, const size_t &idx) const; // this is waaaayy faster
 
-		std::vector<size_t> GetFeaturesInArea(const int& cam, const double &x,
+		const std::vector<size_t>& GetFeaturesInArea(const int& cam, const double &x,
 			const double  &y, const double  &r) const;
 
 		// Image

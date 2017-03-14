@@ -21,7 +21,7 @@
 /*
 * MultiCol-SLAM is based on ORB-SLAM2 which was also released under GPLv3
 * For more information see <https://github.com/raulmur/ORB_SLAM2>
-* Raúl Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
+* Raï¿½l Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
 */
 
 #include "cORBmatcher.h"
@@ -92,7 +92,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &F,
 			if (bFactor)
 				r *= th;
 
-			vector<size_t> vNearIndices =
+			const std::vector<size_t>& vNearIndices =
 				F.GetFeaturesInArea(cam, pMP->mTrackProjX[cam], pMP->mTrackProjY[cam],
 				r*F.mvScaleFactors[nPredictedLevel], nPredictedLevel - 1,
 				nPredictedLevel);
@@ -113,7 +113,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &F,
 			int bestIdx = -1;
 
 			// Get best and second matches with near keypoints
-			for (vector<size_t>::iterator vit = vNearIndices.begin(), vend = vNearIndices.end();
+			for (auto vit = vNearIndices.begin(), vend = vNearIndices.end();
 				vit != vend; vit++)
 			{
 				size_t idx = *vit;
@@ -380,7 +380,7 @@ int cORBmatcher::WindowSearch(cMultiFrame &F1, cMultiFrame &F2,
         int bestDist2 = INT_MAX;
         int bestIdx2 = -1;
 		int camIdx2 = 0;
-		for (vector<size_t>::iterator vit = vIndices2.begin(), vend = vIndices2.end(); 
+		for (auto vit = vIndices2.begin(), vend = vIndices2.end(); 
 			vit != vend; ++vit)
         {
             size_t i2 = *vit;
@@ -512,7 +512,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &F1,
 			F2.camSystem.WorldToCamHom_fast(c, x3Dw, uv);
 			if (F2.camSystem.GetCamModelObj(c).isPointInMirrorMask(uv(0), uv(1), 0))
 			{
-				vector<size_t> vIndices2 = F2.GetFeaturesInArea(c, uv(0), uv(1),
+				const std::vector<size_t>& vIndices2 = F2.GetFeaturesInArea(c, uv(0), uv(1),
 					windowSize, level1, level1);
 				//vector<size_t> vIndices2 = F2.GetFeaturesInArea(c, uv(0), uv(1),
 				//	windowSize);
@@ -531,7 +531,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &F1,
 				int bestIdx2 = -1;
 				int camIdx2 = 0;
 
-				for (vector<size_t>::iterator vit = vIndices2.begin(), vend = vIndices2.end();
+				for (auto vit = vIndices2.begin(), vend = vIndices2.end();
 					vit != vend; ++vit)
 				{
 					size_t i2 = *vit;
@@ -627,7 +627,7 @@ int cORBmatcher::SearchForInitialization(cMultiFrame &F1,
         int bestDist2 = INT_MAX;
         int bestIdx2 = -1;
 
-		for (vector<size_t>::iterator vit = vIndices2.begin(); vit != vIndices2.end(); ++vit)
+		for (auto vit = vIndices2.begin(); vit != vIndices2.end(); ++vit)
         {
             size_t i2 = *vit;
 
@@ -1220,7 +1220,7 @@ int cORBmatcher::SearchForTriangulationBetweenCameras(cMultiKeyFrame *pKF1,
 		int bestDist = INT_MAX;
 		int bestIdx2 = -1;
 		// match the descriptor of the current image point to all points in the area
-		for (vector<size_t>::iterator vit = vIndices.begin(), vend = vIndices.end();
+		for (auto vit = vIndices.begin(), vend = vIndices.end();
 			vit != vend; ++vit)
 		{
 			size_t i2 = *vit;
@@ -1326,7 +1326,7 @@ int cORBmatcher::Fuse(cMultiKeyFrame *pKF,
 			// Search in a radius
 			const double radius = th * vfScaleFactors[nPredictedLevel];
 
-			vector<size_t> vIndices = pKF->GetFeaturesInArea(cam, uv(0), uv(1), radius);
+			const std::vector<size_t>& vIndices = pKF->GetFeaturesInArea(cam, uv(0), uv(1), radius);
 
 			if (vIndices.empty())
 				continue;
@@ -1339,7 +1339,7 @@ int cORBmatcher::Fuse(cMultiKeyFrame *pKF,
 
 			int bestDist = INT_MAX;
 			int bestIdx = -1;
-			for (vector<size_t>::iterator vit = vIndices.begin(), vend = vIndices.end();
+			for (auto vit = vIndices.begin(), vend = vIndices.end();
 				vit != vend; ++vit)
 			{
 				const size_t idx = *vit;
@@ -1485,14 +1485,14 @@ int cORBmatcher::Fuse(cMultiKeyFrame* pKF,
 			const double radius = th * vfScaleFactors[nPredictedLevel];
 
 			// get all indices from specific cam in a radius around the projection
-			vector<size_t> vIndices = pKF->GetFeaturesInArea(cam, uv(0), uv(1), radius);
+			const std::vector<size_t>& vIndices = pKF->GetFeaturesInArea(cam, uv(0), uv(1), radius);
 
 			if (vIndices.empty())
 				continue;
 
 			int bestDist = INT_MAX;
 			int bestIdx = -1;
-			for (vector<size_t>::iterator vit = vIndices.begin(), vend = vIndices.end();
+			for (auto vit = vIndices.begin(), vend = vIndices.end();
 				vit != vend; ++vit)
 			{
 				const size_t idx = *vit;
@@ -1642,7 +1642,7 @@ int cORBmatcher::Fuse(cMultiKeyFrame *pKF, cv::Matx44d Scw,
 			// Search in a radius of 2.5*sigma(ScaleLevel)
 			const double radius = th*pKF->GetScaleFactor(nPredictedLevel);
 
-			vector<size_t> vIndices = pKF->GetFeaturesInArea(cam, uv(0), uv(1), radius);
+			const std::vector<size_t>& vIndices = pKF->GetFeaturesInArea(cam, uv(0), uv(1), radius);
 
 			if (vIndices.empty())
 				continue;
@@ -1655,7 +1655,7 @@ int cORBmatcher::Fuse(cMultiKeyFrame *pKF, cv::Matx44d Scw,
 
 			int bestDist = INT_MAX;
 			int bestIdx = -1;
-			for (vector<size_t>::iterator vit = vIndices.begin();
+			for (auto vit = vIndices.begin();
 				vit != vIndices.end(); ++vit)
 			{
 				const size_t idx = *vit;
@@ -1823,7 +1823,7 @@ int cORBmatcher::SearchBySim3(cMultiKeyFrame *pKF1,
 		// Search in a radius
 		double radius = th*vfScaleFactors2[nPredictedLevel];
 
-		vector<size_t> vIndices = pKF2->GetFeaturesInArea(camIdx1, u, v, radius);
+		const std::vector<size_t>& vIndices = pKF2->GetFeaturesInArea(camIdx1, u, v, radius);
 
 		if (vIndices.empty())
 			continue;
@@ -1836,7 +1836,7 @@ int cORBmatcher::SearchBySim3(cMultiKeyFrame *pKF1,
 
 		int bestDist = INT_MAX;
 		int bestIdx = -1;
-		for (vector<size_t>::iterator vit =
+		for (auto vit =
 			vIndices.begin(), vend = vIndices.end(); vit != vend; ++vit)
 		{
 			size_t idx = *vit;
@@ -1917,7 +1917,7 @@ int cORBmatcher::SearchBySim3(cMultiKeyFrame *pKF1,
 		// Search in a radius of 2.5*sigma(ScaleLevel)
 		double radius = th*vfScaleFactors1[nPredictedLevel];
 
-		vector<size_t> vIndices = pKF1->GetFeaturesInArea(camIdx2, u, v, radius);
+		const std::vector<size_t>& vIndices = pKF1->GetFeaturesInArea(camIdx2, u, v, radius);
 
 		if (vIndices.empty())
 			continue;
@@ -1931,7 +1931,7 @@ int cORBmatcher::SearchBySim3(cMultiKeyFrame *pKF1,
 		int bestDist = INT_MAX;
 		int bestIdx = -1;
 
-		for (vector<size_t>::iterator vit = vIndices.begin(), vend = vIndices.end();
+		for (auto vit = vIndices.begin(), vend = vIndices.end();
 			vit != vend; ++vit)
 		{
 			size_t idx = *vit;
@@ -2027,7 +2027,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &CurrentFrame,
 			// Search in a window. Size depends on scale
 			double radius = th*CurrentFrame.mvScaleFactors[nPredictedOctave];
 
-			vector<size_t> vIndices2 =
+			const std::vector<size_t>& vIndices2 =
 				CurrentFrame.GetFeaturesInArea(cam, uv(0), uv(1), radius,
 				nPredictedOctave - 1, nPredictedOctave + 1);
 			//vector<size_t> vIndices2 =
@@ -2045,7 +2045,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &CurrentFrame,
 			int bestDist = INT_MAX;
 			int bestIdx2 = -1;
 			// match
-			for (vector<size_t>::iterator vit = vIndices2.begin(), vend = vIndices2.end();
+			for (auto vit = vIndices2.begin(), vend = vIndices2.end();
 				vit != vend; ++vit)
 			{
 				size_t i2 = *vit;
@@ -2173,7 +2173,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &CurrentFrame,
 					// Search in a window
 					double radius = th*CurrentFrame.mvScaleFactors[nPredictedLevel];
 
-					vector<size_t> vIndices2 =
+					const std::vector<size_t>& vIndices2 =
 						CurrentFrame.GetFeaturesInArea(cam, uv(0), uv(1),
 						radius, nPredictedLevel - 1, nPredictedLevel + 1);
 					//vector<size_t> vIndices2 =
@@ -2189,7 +2189,7 @@ int cORBmatcher::SearchByProjection(cMultiFrame &CurrentFrame,
 					int bestDist = INT_MAX;
 					int bestIdx2 = -1;
 
-					for (vector<size_t>::iterator vit = vIndices2.begin(); vit != vIndices2.end(); vit++)
+					for (auto vit = vIndices2.begin(); vit != vIndices2.end(); vit++)
 					{
 						size_t i2 = *vit;
 						if (CurrentFrame.mvpMapPoints[i2])
@@ -2338,7 +2338,7 @@ int cORBmatcher::SearchByProjection(cMultiKeyFrame* pKF,
 		// Search in a radius
 		const double radius = th*pKF->GetScaleFactor(nPredictedLevel);
 
-		vector<size_t> vIndices = pKF->GetFeaturesInArea(camIdx, uv(0), uv(1), radius);
+		const std::vector<size_t>& vIndices = pKF->GetFeaturesInArea(camIdx, uv(0), uv(1), radius);
 
 		if (vIndices.empty())
 			continue;
@@ -2352,7 +2352,7 @@ int cORBmatcher::SearchByProjection(cMultiKeyFrame* pKF,
 		int bestDist = INT_MAX;
 		int bestIdx = -1;
 
-		for (vector<size_t>::iterator vit = vIndices.begin(), 
+		for (auto vit = vIndices.begin(), 
 			vend = vIndices.end();vit != vend; ++vit)
 		{
 			size_t idx = *vit;

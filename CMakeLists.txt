@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MultiCol-SLAM . If not, see <http://www.gnu.org/licenses/>.
-
+cmake_minimum_required(VERSION 3.5)
 project (MultiCol-SLAM)
 
 IF(NOT CMAKE_BUILD_TYPE)
@@ -34,8 +34,8 @@ IF(WIN32)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -openmp -W0 -MP")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -openmp -W0 -MP")
 ELSE()
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp -O3 -march=native -std=c++11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -O3 -march=native -std=c++11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp -march=native -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -march=native -std=c++11")
 ENDIF()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
@@ -197,4 +197,6 @@ ENDIF()
 MESSAGE("${PROJECT_NAME}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Lafida)
 add_executable(multi_col_slam_lafida Examples/Lafida/mult_col_slam_lafida.cpp)
+# add_dependencies(multi_col_slam_lafida DBoW2)
+
 target_link_libraries(multi_col_slam_lafida ${PROJECT_NAME})

@@ -21,7 +21,7 @@
 /*
 * MultiCol-SLAM is based on ORB-SLAM2 which was also released under GPLv3
 * For more information see <https://github.com/raulmur/ORB_SLAM2>
-* Raúl Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
+* Raï¿½l Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
 */
 
 #ifndef SYSTEM_H
@@ -61,7 +61,7 @@ namespace MultiColSLAM
 		cSystem(const string &strVocFile, const string &strSettingsFile,
 			const string& path2MCScalibrationFiles, const bool bUseViewer = true);
 
-		void LoadMCS(const string path2calibrations, cMultiCamSys_& camSystem);
+		cMultiCamSys_ LoadMCS(const string path2calibrations);
 
 		// Proccess the given frames. Images must be synchronized. The camera calibration needs to be known
 		// Input images: RGB (CV_8UC3) or grayscale (CV_8U). RGB is converted to grayscale.

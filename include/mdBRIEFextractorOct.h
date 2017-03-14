@@ -21,7 +21,7 @@
 /*
 * MultiCol-SLAM is based on ORB-SLAM2 which was also released under GPLv3
 * For more information see <https://github.com/raulmur/ORB_SLAM2>
-* Raúl Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
+* Raï¿½l Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
 */
 
 #ifndef MDBRIEFEXTRACTOROCT_H
@@ -353,8 +353,8 @@ namespace MultiColSLAM
 		~mdBRIEFextractorOct(){}
 
 		void operator()(
-			cv::InputArray _image,
-			cv::InputArray _mask,
+			const cv::Mat& _image,
+			const cv::Mat& _mask,
 			std::vector<cv::KeyPoint>& _keypoints,
 			cCamModelGeneral_& camModel,
 			cv::OutputArray _descriptors,
@@ -368,7 +368,7 @@ namespace MultiColSLAM
 		int GetDescriptorSize() { return descSize; }
 
 	protected:
-		void ComputePyramid(cv::Mat image, cv::Mat Mask = cv::Mat());
+		void ComputePyramid(const cv::Mat& image,const cv::Mat& Mask = cv::Mat());
 
 		void ComputeKeyPointsOctTree(
 			std::vector<std::vector<cv::KeyPoint> >& allKeypoints);

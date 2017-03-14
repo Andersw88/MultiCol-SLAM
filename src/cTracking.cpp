@@ -21,7 +21,7 @@
 /*
 * MultiCol-SLAM is based on ORB-SLAM2 which was also released under GPLv3
 * For more information see <https://github.com/raulmur/ORB_SLAM2>
-* Raúl Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
+* Raï¿½l Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
 */
 
 #include <opencv2/opencv.hpp>
@@ -208,15 +208,15 @@ cv::Matx44d cTracking::GrabImageSet(const std::vector<cv::Mat>& imgSet,
 {
 	std::chrono::system_clock Time;
 
-	std::vector<cv::Mat> convertedImages(imgSet.size());
-	convertedImages = imgSet;
+	// std::vector<cv::Mat> convertedImages(imgSet.size());
+	// convertedImages = imgSet;
 
 	if (mState == WORKING || mState == LOST)
-		mCurrentFrame = cMultiFrame(convertedImages,
+		mCurrentFrame = cMultiFrame(imgSet,
 		timestamp, mp_mdBRIEF_extractorOct, mpORBVocabulary, 
 		camSystem, imgCounter - 1);
 	else
-		mCurrentFrame = cMultiFrame(convertedImages,
+		mCurrentFrame = cMultiFrame(imgSet,
 		timestamp, mp_mdBRIEF_init_extractorOct, mpORBVocabulary, 
 		camSystem, imgCounter - 1);
 
@@ -229,7 +229,7 @@ cv::Matx44d cTracking::GrabImageSet(const std::vector<cv::Mat>& imgSet,
 		loopAndMapperSet = true;
 	}
 
-	Track();
+	
 
 	return mCurrentFrame.GetPose();
 }
@@ -789,8 +789,8 @@ bool cTracking::TrackPreviousFrame()
 
 bool cTracking::TrackWithMotionModel()
 {
-	std::chrono::steady_clock::time_point begin;
-	std::chrono::steady_clock::time_point end;
+	// std::chrono::steady_clock::time_point begin;
+	// std::chrono::steady_clock::time_point end;
 	cORBmatcher matcher(0.8, checkOrientation, 
 		mCurrentFrame.DescDims(), mCurrentFrame.HavingMasks());
     vector<cMapPoint*> vpMapPointMatches;
@@ -804,10 +804,10 @@ bool cTracking::TrackWithMotionModel()
     fill(mCurrentFrame.mvpMapPoints.begin(),
 		mCurrentFrame.mvpMapPoints.end(),static_cast<cMapPoint*>(NULL));
 
-	begin = std::chrono::steady_clock::now();
+	// begin = std::chrono::steady_clock::now();
     // Project points seen in previous frame
 	int nmatches = matcher.SearchByProjection(mCurrentFrame, mLastFrame, 50);
-	end = std::chrono::steady_clock::now();
+	// end = std::chrono::steady_clock::now();
 
     if (nmatches < 10)
        return false;

@@ -131,7 +131,7 @@ namespace MultiColSLAM
 		// Compute the cell of a keypoint (return false if outside the grid)
 		bool PosInGrid(const int& cam, cv::KeyPoint &kp, int &posX, int &posY);
 
-		std::vector<size_t> GetFeaturesInArea(const int& cam,
+		const std::vector<size_t>& GetFeaturesInArea(const int& cam,
 			const double &x, const double  &y,
 			const double  &r,
 			const int minLevel = -1, const int maxLevel = -1) const;
@@ -139,6 +139,7 @@ namespace MultiColSLAM
 		// Scale Pyramid Info
 		int mnScaleLevels;
 		double mfScaleFactor;
+		
 		std::vector<double> mvScaleFactors;
 		std::vector<double> mvLevelSigma2;
 		std::vector<double> mvInvLevelSigma2;
